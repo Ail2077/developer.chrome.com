@@ -2,7 +2,7 @@
 layout: 'layouts/blog-post.njk'
 title: Richer PWA installation
 description: Mobile devices and app stores have change how users discover, evaluate, and install software. PWAs need to keep up.
-date: 2022-09-01
+date: 2022-09-01 // Aspirational date
 authors:
   - joemedley
 tags:
@@ -18,143 +18,71 @@ This is an experimental UI, and could change in the future depending on develope
 
 ## Introduction {: #introduction }
 
-Mobile devices vendor app stores have changed how users discover, evaluate, and install software. Users are now so familliar with app stores and the information they provide&mdash;app context, social feedback, ratings, and etc.&mdash;that app store idioms are emerging on other platforms including ChromeOS, Mac, and Windows. In 2021, Chrome brought these idioms to Progressive Web Apps by adding new members to the [web app manifest](https://web.dev/add-manifest/#screenshots). Starting in Chrome 106, developers can provide different experiences to different-sized screens. That works out to different experiences 
+The app stores provide by mobile vendors have changed how users discover, evaluate, and install software. Users are now so familliar with app stores and the information they provide&mdash;app context, social feedback, ratings, and etc.&mdash;that app store idioms are emerging on other platforms including ChromeOS, Mac, and Windows. In 2021, Chrome brought these idioms to Progressive Web Apps by adding new members to the [web app manifest](https://web.dev/add-manifest/#screenshots). Starting in Chrome 106, developers can provide different experiences for mobile and desktop. 
  
-## Challenge with today's install surfaces {: #today }
+## Challenge with the previous install experience {: #today }
 
-Today, if a user wants to install a PWA, an infobar and modal overlay appears with minimal
-information. If they continue to install, the process is over too quickly without giving
-context to the user. This goes against their expectations of installing apps and can leave them
-somewhat confused about what has happened.  
+The older style of install prompt provided little information and context and is over too quickly. This didn't match users' expectations of what installation means and could leave them confused about what happened. Many declined the install request entirely, which was also bad for the businesses that built them. 
 
+{% Columns %}
+{% Column %}
 <figure>
-  {% Img src="image/xizoeLGxYNf3VLUHc5BsIoiE1Af1/VwB1V3K61vQMs1htKJpY.png", alt="An example of PWA install UI.", width="360", height="720" %}
-  <figcaption>An example of the PWA install UI.</figcaption>
+  {% Img src="image/xizoeLGxYNf3VLUHc5BsIoiE1Af1/VwB1V3K61vQMs1htKJpY.png", alt="Older PWA installation on mobile", width="360", height="720" %}
+  <figcaption>Older PWA installation on mobile.</figcaption>
 </figure>
-
-To enable developers to provide installed experiences on par with native experiences
-Chrome is introducing a new install surface, richer install, that allows developers to add a
-description and screenshots to their manifest file and have it appear in a bottomsheet dialog
-within Chrome for Android. 
-
+{% endColumn %}
+{% Column %}
 <figure>
-  {% Img src="image/xizoeLGxYNf3VLUHc5BsIoiE1Af1/RoQRxu3CPkKvAtkxYsAQ.jpeg", alt="Example of bottomsheet UI in Chrome", width="360", height="720" %}
-  <figcaption>Example of bottomsheet UI in Chrome.</figcaption>
+  {% Img src="", 
+alt="Older PWA installation on desktop.", width="342", height="722" %}
+  <figcaption>Older PWA installation on desktop.</figcaption>
 </figure>
+{% endColumn %}
+{% endColumns %}
 
-This gives developers the opportunity to create a more enticing install process
-that better aligns to user expectations and that mimics their existing mental model
-of installed experiences. 
-
+Richer installs let you create experiences more like those on operating systems. To do this, add a description and one or more screenshots to your web app manifest. As you can see below, this creates a more inviting and informative installation, 
 
 {% Columns %}
 {% Column %}
 <figure>
   {% Img src="image/xizoeLGxYNf3VLUHc5BsIoiE1Af1/SpStAtUk8Zp5iwi9yqKP.jpg", 
-alt="Richer install UI Expanded", width="342", height="722" %}
-  <figcaption>Richer install UI expanded.</figcaption>
+alt="Richer Android install UI Expanded", width="342", height="722" %}
+  <figcaption>Richer Android install UI expanded.</figcaption>
 </figure>
 {% endColumn %}
 {% Column %}
 <figure>
   {% Img src="image/xizoeLGxYNf3VLUHc5BsIoiE1Af1/k7r4yKqrh6iOm2XyZHfw.jpg", 
-alt="Richer install UI Collapsed", width="342", height="722" %}
-  <figcaption>Richer install UI collapsed.</figcaption>
+alt="Richer Android install UI Collapsed", width="342", height="722" %}
+  <figcaption>Richer Android install UI collapsed.</figcaption>
 </figure>
 {% endColumn %}
 {% endColumns %}
 
-## Backwards compatibility {: #compatibility }
-
-Websites that do not include at least one screenshot to their manifest file will continue to receive 
-the existing prompts. This may change in the future depending on uptake of the developer community 
-and users' reactions.  
-
-## Previewing the UI {: #previewing }
-
-This UI works in Chrome 91 or later on Android, with the flag `#mobile-pwa-install-use-bottom-sheet` enabled in `chrome://flags`.
-
-This feature is enabled on [squoosh.app](https://squoosh.app) and can be previewed there. As an
-aside, [#screenshots](https://web.dev/add-manifest/#screenshots) and 
-[#description](https://web.dev/add-manifest/#description) fields are already documented; 
-you can give it a try behind the flag. 
-
-## Implementation {: #implementation }
-
-To enable richer installs on your site you need to add at least one screenshot to your 
-manifest file. Descriptions are not required but are recommended. 
-
-Origins that are too long to fit the UI are truncated, this is also known as eliding and is used
-as a [security measure to protect users](https://chromium.googlesource.com/chromium/src/+/master/docs/security/url_display_guidelines/url_display_guidelines.md#eliding-urls). 
-
-Let's take a look at how you can trigger richer install UI when installing a PWA. This is an example
-of the squoosh.app implementation. Let's assume that you have your name and origin
-defined.
-
-The manifest should look like this; 
-
- ```javascript
- {
-"name": "Squoosh App",
-"icons": [{
-"src": "image/icon.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }],
-"start_url": "/?start_url",
-"scope": "/",
-"display": "standalone",
-"background_color": "#fff",
-"theme_color": "#fff"
-}
- ```
-
-Now add the screenshots to the end of the manifest.json file; 
-
-## Screenshots {: #screenshots }
-
-To add screenshots you need to determine the size, source, and type following these 
-[criteria](https://web.dev/add-manifest/#screenshots). 
-
-* Width and height must be at least 320px and at most 3840px.
-* The maximum dimension can't be more than 2.3 times as long as the minimum dimension.
-* All screenshots must have the same aspect ratio.
-* Only JPEG and PNG image formats are supported.
-
-Currently animated gifs are not supported. Also, you need to include the size and type of the image so it 
-is rendered correctly. 
-[See this demo](https://glitch.com/edit/#!/richerinstall-screenshot?path=manifest.json%3A14%3A24).
-
- ```javascript
- "screenshots": [
-    {
-     "src": "source/image1.gif",
-      "sizes": "320x640",
-      "type": "image/gif"
-    }
-]
-```
+Although based on the same information, a desktop installation provides more space for the images. Desktop can take advantage of that space by provideing larger images. 
 
 <figure>
-  {% Img src="image/xizoeLGxYNf3VLUHc5BsIoiE1Af1/7jsL23QoMfniU7WTHDK8.jpg", 
-alt="A single screenshot added.", width="342", height="684" %}
-  <figcaption>A single screenshot added.</figcaption>
+  {% Img src="image/.jpg", 
+alt="Richer desktop UI", width="342", height="722" %}
+  <figcaption>Richer desktop UI.</figcaption>
 </figure>
 
-## Description {: #description }
+The rest of this article describes how to implement richer installations and where they're supported.
 
-Descriptions are not compulsory; however, only seven lines of text are allowed. That works out to roughly 324 characters. After that an ellipse appears and 
-truncates longer descriptions 
-([for example](https://glitch.com/edit/#!/richerinstall-longer-description)). 
+## Implementing richer installs {: #implementation }
 
-In the future we will consider adding other data such as categories and app rating, but this will 
-be based on feedback from developers and users. 
-[See the demo](https://glitch.com/edit/#!/richerinstall-description?path=manifest.json%3A13%3A29).
+to implement a richer installation add the `description` and `screenshots` properties to the web app manifest. 
 
- ```javascript
+### Description {: #description }
+
+The `description` member describes the application in the installation prompt. Only seven lines of text are allowed in the description, which works out to about 324 characters. Longer descriptions are truncated and an ellipsis is appended ([for example](https://glitch.com/edit/#!/richerinstall-longer-description)). 
+
+ ```json
 "description": "Compress and compare images with different codecs 
 right in your browser."
  ```
+
+The description appears at the top of the installation prompt.
 
 {% Columns %}
 {% Column %}
@@ -173,7 +101,110 @@ alt="A longer description that has been truncated.", width="342", height="684" %
 {% endColumn %}
 {% endColumns %}
 
+{% Aside 'caution' %}
+You may have noticed from the screenshots that installation dialogs al;so list the app's Origin. Origins that are too long to fit the UI are truncated, this is also known as eliding and is used
+as a [security measure to protect users](https://chromium.googlesource.com/chromium/src/+/master/docs/security/url_display_guidelines/url_display_guidelines.md#eliding-urls). 
+{% endAside %}
 
+### Screenshots {: #screenshots }
+
+Although a richer installation needs a description, you can't really call it 'richer' without the [`screenshots` member](https://web.dev/add-manifest/#screenshots) to the web app manifest. It takes an array that requires at least one member and can have up to eight. An example is shown below. 
+
+```json
+ "screenshots": [
+    {
+     "src": "source/image1.gif",
+      "sizes": "320x640",
+      "type": "image/gif",
+      "platform": "wide",
+      "label": "Wonder Widgets"
+    }
+]
+```
+
+In practice that produces something like this:
+
+<figure>
+  {% Img src="image/xizoeLGxYNf3VLUHc5BsIoiE1Af1/7jsL23QoMfniU7WTHDK8.jpg", 
+alt="A single screenshot added.", width="342", height="684" %}
+  <figcaption>A single screenshot added.</figcaption>
+</figure>
+
+Screenshots must follow these criteria: 
+
+* Width and height must be at least 320px and at most 3840px.
+* The maximum dimension can't be more than 2.3 times as long as the minimum dimension.
+* All screenshots must have the same aspect ratio.
+* Only JPEG and PNG image formats are supported.
+
+Currently animated gifs are not supported. Also, you need to include the size and type of the image so it 
+is rendered correctly. [See this demo](https://glitch.com/edit/#!/richerinstall-screenshot?path=manifest.json%3A14%3A24).
+
+Most of these properties have been supported since Chrome 91; however, the `platform` property is new as of Chrome 106/however the `platform` member is not yet supported. We hope to land it in Chrome xxx. The first implementation of `platform` has two possible values: `wide` for desktop installations; `narrow` for mobile installations. We hope to expand that number in the future to cover specific platforms and distribution channels.
+
+The `platform` is optional because you should only use it when the layout is varies by screen size. The same will apply to platform and channel specific values in the future. 
+
+### Wrapping it all up
+
+If you add the new members, your web app manifest might look the one below. This is just to give you a sense of context. The actual manifest for the [Squoosh App](https://squoosh.app/) is larger. Before you run off to install it, you'll want to turn on the flags that enable the new installation experince. Otherwise you won't see it.
+
+```json
+{
+  "name": "Squoosh App",
+  "icons": [{
+  "src": "image/icon.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }],
+  "start_url": "/?start_url",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#fff",
+  "theme_color": "#fff",
+  "description": "Compress and compare images with different codecs 
+right in your browser.",
+  "screenshots": [
+    {
+      "src": "source/image1.gif",
+      "sizes": "320x640",
+      "type": "image/gif",
+      "platform": "wide",
+      "label": "Wonder Widgets"
+    }
+  ]
+}
+ ```
+
+## Current status {: #status }
+
+The existing prompts will be shown for web apps that do not update the web app manifest. This may change in the future depending on devloper uptake and users' reactions.
+
+<div>
+
+| Step                                     | Status                   |
+| ---------------------------------------- | ------------------------ |
+| 1. Create explainer                      | [Complete](https://github.com/w3c/manifest-app-info/blob/main/explainer.md)    |
+| 2. Create initial draft of specification | [Complete](https://www.w3.org/TR/manifest-app-info/)              |
+| 3. Gather feedback & iterate on design   | [In progress](#feedback) |
+| 4. Launch                                | Not started              |
+
+</div>
+
+## Previewing richer installs {: #previewing }
+
+To enabled the new web app manifest members, go to `chrome://flags` and set the following flags to 'Enabled'.
+
+* Set `#mobile-pwa-install-use-bottom-sheet` to enable the `description` and `screenshots` properties. This works in Chrome 91 or later. 
+
+* To `[TBD]` to enabled the `platform` properties. This works in Chrome xxx or later. 
+
+This UI works in Chrome 91 or later on Android, with the flag `#mobile-pwa-install-use-bottom-sheet` enabled in `chrome://flags`.
+
+## Looking forward {: #looking-forward}
+
+In the future we will consider adding other data such as categories and app rating, but this will 
+be based on feedback from developers and users. 
+[See the demo](https://glitch.com/edit/#!/richerinstall-description?path=manifest.json%3A13%3A29).
 
 ## Feedback  
 In the coming months we would love to see how developers explore this new UI pattern and we 
